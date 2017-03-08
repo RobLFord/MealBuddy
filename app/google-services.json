@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "357875042739",
+    "firebase_url": "https://mealbuddy-6f17f.firebaseio.com",
+    "project_id": "mealbuddy-6f17f",
+    "storage_bucket": "mealbuddy-6f17f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:357875042739:android:efd0442aa683a2bf",
+        "android_client_info": {
+          "package_name": "com.example.mealbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "357875042739-5k6porfdkmv802m2kqmi69bifnrbnrbn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mealbuddy",
+            "certificate_hash": "0c420cf74deda5fd891136092b16b2fe8bf38250"
+          }
+        },
+        {
+          "client_id": "357875042739-h8obuuendcuhsbmrkn3mip0hcunuli6o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgdTEvtzpxEXYDG1b5mvRhMe0PCrrCEYg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "357875042739-h8obuuendcuhsbmrkn3mip0hcunuli6o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
