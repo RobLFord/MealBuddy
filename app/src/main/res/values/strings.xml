@@ -4,9 +4,10 @@
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
     <string name="login_button">Login</string>
-    <string name="register_text">Register</string>
+    <string name="signup_text">Sign Up!</string>
     <string name="forgot_password_text">Forgot Password</string>
-    <string name="forgot_username_text">Forgot Username</string>
     <string name="login_success_toast">Login Successful</string>
     <string name="login_fail_toast">Login Failed!</string>
+    <string name="signup_dialog_text">MealBuddy Sign-Up</string>
+    <string name="email_hint">Email</string>
 </resources>

@@ -3,6 +3,7 @@ package com.example.mealbuddy;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ public class LoginFragment extends Fragment {
     private EditText mUsernameField;
     private EditText mPasswordField;
     private Button mLoginButton;
-    private TextView mRegisterText;
+    private TextView mSignupText;
     private TextView mForgotPasswordText;
     private TextView mForgotUsernameText;
 
@@ -101,13 +102,37 @@ public class LoginFragment extends Fragment {
                                     messageToast = R.string.login_success_toast;
                                 }
 
+                                mUser.setPassword(null);
                                 Toast.makeText(getActivity(), messageToast, Toast.LENGTH_SHORT).show();
                             }
                         });
             }
         });
 
+        mSignupText = (TextView) v.findViewById(R.id.login_signup);
+        mSignupText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                FragmentManager manager = getFragmentManager();
+                SignUpFragment dialog = new SignUpFragment();
+                dialog.show(manager, null);
+            }
+        });
+
         return v;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mUser.getAuth().addAuthStateListener(mUser.getAuthStateListener());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mUser.getAuthStateListener() != null) {
+            mUser.getAuth().removeAuthStateListener(mUser.getAuthStateListener());
+        }
+    }
 }
