@@ -8,6 +8,10 @@
     <string name="forgot_password_text">Forgot Password</string>
     <string name="login_success_toast">Login Successful</string>
     <string name="login_fail_toast">Login Failed!</string>
-    <string name="signup_dialog_text">MealBuddy Sign-Up</string>
+    <string name="signup_dialog_text">MealBuddy Sign Up</string>
     <string name="email_hint">Email</string>
+    <string name="menu_meal_planner">Planner</string>
+    <string name="menu_my_meals">My Meals</string>
+    <string name="menu_browse">Browse</string>
+    <string name="menu_shopping_list">Shopping Lists</string>
 </resources>

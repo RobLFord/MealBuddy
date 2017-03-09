@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
+import static android.content.ContentValues.TAG;
+
 
 /**
  * Created by rf122 on 3/6/2017.
@@ -25,6 +28,7 @@ import com.google.firebase.auth.AuthResult;
 
 public class LoginFragment extends Fragment {
 
+    private static final String TAG = "LoginFragment";
     private User mUser;
 
     private EditText mUsernameField;
@@ -33,6 +37,15 @@ public class LoginFragment extends Fragment {
     private TextView mSignupText;
     private TextView mForgotPasswordText;
     private TextView mForgotUsernameText;
+   // private Callbacks mCallbacks;
+
+    public void onLoginSelected() {
+        //Log.d(TAG, "onLoginSelected");
+        MainFragment fragment = new MainFragment();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null).commit();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,8 +111,11 @@ public class LoginFragment extends Fragment {
 
                                 if (!task.isSuccessful()) {
                                     messageToast = R.string.login_fail_toast;
+                                    Log.d(TAG, "Login is failed");
                                 } else {
                                     messageToast = R.string.login_success_toast;
+                                    Log.d(TAG, "Login is successful");
+                                    onLoginSelected();
                                 }
 
                                 mUser.setPassword(null);

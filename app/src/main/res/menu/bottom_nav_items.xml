@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_meal_planner"
+        android:title="@string/menu_meal_planner"
+        android:icon="@drawable/ic_date_range_black_36dp"
+        />
+
+    <item
+        android:id="@+id/menu_my_meals"
+        android:title="@string/menu_my_meals"
+        android:icon="@drawable/ic_local_dining_black_36dp"
+        />
+
+    <item
+        android:id="@+id/menu_browse"
+        android:title="@string/menu_browse"
+        android:icon="@drawable/ic_search_black_36dp"
+        />
+
+    <item
+        android:id="@+id/menu_shopping_list"
+        android:title="@string/menu_shopping_list"
+        android:icon="@drawable/ic_local_grocery_store_black_36dp"
+        />
+
+</menu>
