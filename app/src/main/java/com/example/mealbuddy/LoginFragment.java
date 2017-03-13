@@ -21,6 +21,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
@@ -67,11 +72,22 @@ public class LoginFragment extends Fragment {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                FirebaseUser firebase_user = firebaseAuth.getCurrentUser();
 
-                if (user != null) {
-                    Log.i(TAG, "User logged in: " + mAuth.getCurrentUser().getEmail());
-                    onLoginSelected();
+                if (firebase_user != null) {
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+                    Log.i(TAG, "User logged in: " + firebaseUser.getEmail());
+
+                    User user = new User(firebaseUser.getUid());
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("User", user);
+                    Fragment fragment = new MainFragment();
+                    fragment.setArguments(bundle);
+
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .commit();
                 }
             }
         };
@@ -151,7 +167,20 @@ public class LoginFragment extends Fragment {
                 dialog.setSignUpListener(new SignUpFragment.DialogFragmentListener() {
                     @Override
                     public void onDialogPositiveClick(DialogFragment dialog, String email, String password) {
-                        mUser.getAuth().createUserWithEmailAndPassword(email, password);
+                        mUser.getAuth().createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        DatabaseReference db = FirebaseDatabase.getInstance()
+                                                .getReference();
+
+                                        Map<String, Object> user_values = new HashMap<>();
+                                        user_values.put("name", "");
+                                        user_values.put("email", mAuth.getCurrentUser().getEmail());
+                                        db.child("users").child(mAuth.getCurrentUser().getUid())
+                                                .setValue(user_values);
+                                    }
+                                });
                     }
 
                     @Override
