@@ -2,6 +2,7 @@ package com.example.mealbuddy;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
@@ -18,6 +19,13 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
@@ -30,6 +38,8 @@ public class LoginFragment extends Fragment {
 
     private static final String TAG = "LoginFragment";
     private User mUser;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     private EditText mUsernameField;
     private EditText mPasswordField;
@@ -57,6 +67,30 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser firebase_user = firebaseAuth.getCurrentUser();
+
+                if (firebase_user != null) {
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+                    Log.i(TAG, "User logged in: " + firebaseUser.getEmail());
+
+                    User user = new User(firebaseUser.getUid());
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("User", user);
+                    Fragment fragment = new MainFragment();
+                    fragment.setArguments(bundle);
+
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .commit();
+                }
+            }
+        };
 
         mUsernameField = (EditText) v.findViewById(R.id.login_username);
         mUsernameField.addTextChangedListener(new TextWatcher() {
@@ -115,7 +149,6 @@ public class LoginFragment extends Fragment {
                                 } else {
                                     messageToast = R.string.login_success_toast;
                                     Log.d(TAG, "Login is successful");
-                                    onLoginSelected();
                                 }
 
                                 mUser.setPassword(null);
@@ -131,6 +164,28 @@ public class LoginFragment extends Fragment {
             public void onClick(View v){
                 FragmentManager manager = getFragmentManager();
                 SignUpFragment dialog = new SignUpFragment();
+                dialog.setSignUpListener(new SignUpFragment.DialogFragmentListener() {
+                    @Override
+                    public void onDialogPositiveClick(DialogFragment dialog, String email, String password) {
+                        mUser.getAuth().createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        DatabaseReference db = FirebaseDatabase.getInstance()
+                                                .getReference();
+
+                                        Map<String, Object> user_values = new HashMap<>();
+                                        user_values.put("name", "");
+                                        user_values.put("email", mAuth.getCurrentUser().getEmail());
+                                        db.child("users").child(mAuth.getCurrentUser().getUid())
+                                                .setValue(user_values);
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onDialogNegativeClick(DialogFragment dialog) {}
+                });
                 dialog.show(manager, null);
             }
         });
@@ -141,14 +196,15 @@ public class LoginFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mUser.getAuth().addAuthStateListener(mUser.getAuthStateListener());
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mUser.getAuthStateListener() != null) {
-            mUser.getAuth().removeAuthStateListener(mUser.getAuthStateListener());
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mUser.getAuthStateListener());
         }
+
     }
 }

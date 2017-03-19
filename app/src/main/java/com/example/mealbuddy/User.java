@@ -1,5 +1,7 @@
 package com.example.mealbuddy;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,14 +14,17 @@ import com.google.firebase.auth.FirebaseUser;
  * Created by Rob Ford on 3/7/2017.
  */
 
-public class User {
+public class User implements Parcelable {
 
     private String mPassword;
     private String mUsername;
+    private String mUid;
     private boolean mUserLoggedIn;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+    public String getUid() { return mUid; }
 
     public String getPassword() {
         return mPassword;
@@ -64,5 +69,36 @@ public class User {
                 }
             }
         };
+    }
+
+    public User(String uid) {
+        mUid = uid;
+    }
+
+    public static final Parcelable.Creator<User> CREATOR
+            = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[0];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mUid);
+    }
+
+    private User(Parcel in) {
+        mUid = in.readString();
     }
 }

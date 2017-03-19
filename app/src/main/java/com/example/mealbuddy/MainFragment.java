@@ -30,7 +30,10 @@ public class MainFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Nothing here yet
+
+        Bundle bundle = getArguments();
+        User user = bundle.getParcelable("User");
+        Log.i(TAG, "User: " + user.getUid());
     }
 
     @Override
