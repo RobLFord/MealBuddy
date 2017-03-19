@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/plan_title_and_date_period"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Plan Title : Plan Date Period"
+        android:textAlignment="center"
+        android:background="@android:color/darker_gray"
+        android:padding="5dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/day_plan_period_recycler_view">
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>
