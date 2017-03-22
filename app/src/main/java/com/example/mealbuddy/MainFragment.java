@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+import com.example.mealbuddy.models.User;
 
 /**
  * Created by Rob Ford on 3/8/2017.

@@ -2,6 +2,8 @@ package com.example.mealbuddy;
 
 import android.content.Context;
 
+import com.example.mealbuddy.models.Plan;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

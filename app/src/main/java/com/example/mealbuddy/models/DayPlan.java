@@ -1,4 +1,4 @@
-package com.example.mealbuddy;
+package com.example.mealbuddy.models;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -1,7 +1,6 @@
-package com.example.mealbuddy;
+package com.example.mealbuddy.models;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
