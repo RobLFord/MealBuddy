@@ -25,6 +25,7 @@ public class MainFragment extends Fragment{
 
     private BottomNavigationView mBottomNav;
     private int mSelectedItem;
+    private User mUser;
 
 
     @Override
@@ -32,8 +33,8 @@ public class MainFragment extends Fragment{
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
-        User user = bundle.getParcelable("User");
-        Log.i(TAG, "User: " + user.getUid());
+        mUser = bundle.getParcelable("User");
+        Log.i(TAG, "User: " + mUser.getUid());
     }
 
     @Override
@@ -79,7 +80,7 @@ public class MainFragment extends Fragment{
         // init corresponding fragment
         switch (mSelectedItem) {
             case R.id.menu_meal_planner:
-                frag = MealPlannerFragment.newInstance(getString(R.string.menu_meal_planner));
+                frag = MealPlannerFragment.newInstance(getString(R.string.menu_meal_planner), mUser);
                 break;
             case R.id.menu_my_meals:
                 frag = MyMealsFragment.newInstance(getString(R.string.menu_my_meals));

@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Vector;
+
 /**
  * Created by Rob Ford on 3/7/2017.
  */
@@ -17,6 +19,7 @@ public class User implements Parcelable {
     private String mUsername;
     private String mUid;
     private boolean mUserLoggedIn;
+    private Vector<Plan> mPlans = new Vector<>();
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -49,6 +52,14 @@ public class User implements Parcelable {
 
     public FirebaseAuth.AuthStateListener getAuthStateListener() {
         return mAuthStateListener;
+    }
+
+    public Vector<Plan> getPlans() {
+        return mPlans;
+    }
+
+    public void addPlan(Plan newPlan) {
+        mPlans.add(newPlan);
     }
 
     public User() {

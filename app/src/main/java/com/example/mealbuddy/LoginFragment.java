@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mealbuddy.models.Plan;
 import com.example.mealbuddy.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -79,6 +80,8 @@ public class LoginFragment extends Fragment {
                     Log.i(TAG, "User logged in: " + firebaseUser.getEmail());
 
                     User user = new User(firebaseUser.getUid());
+                    user.addPlan(new Plan("2017-03-19", Plan.Duration.ONE_WEEK));
+                    user.addPlan(new Plan("2017-03-26", Plan.Duration.TWO_WEEKS));
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("User", user);
                     Fragment fragment = new MainFragment();

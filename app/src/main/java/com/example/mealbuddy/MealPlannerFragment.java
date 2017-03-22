@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mealbuddy.models.Plan;
+import com.example.mealbuddy.models.User;
 
 import java.util.List;
 
@@ -25,17 +26,18 @@ import java.util.List;
 public class MealPlannerFragment extends Fragment {
     private RecyclerView mPlanRecyclerView;
     private PlanAdapter mPlanAdapter;
-
+    private User mUser;
 
     private static final String ARG_TEXT = "arg_text";
 
     private String mText;
 
 
-    public static Fragment newInstance(String text) {
+    public static Fragment newInstance(String text, User user) {
         Fragment frag = new MealPlannerFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, text);
+        args.putParcelable("User", user);
         frag.setArguments(args);
         return frag;
     }
@@ -119,6 +121,11 @@ public class MealPlannerFragment extends Fragment {
         mPlanRecyclerView = (RecyclerView) view.findViewById(R.id.plans_recycler_view);
         mPlanRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        if (savedInstanceState == null) {
+            Bundle args = getArguments();
+            mUser = args.getParcelable("User");
+        }
+
         updateUI();
 
         return view;
@@ -153,10 +160,7 @@ public class MealPlannerFragment extends Fragment {
     }
 
     private void updateUI() {
-        PlannerCatalog plannerCatalog = PlannerCatalog.get(getActivity());
-        List<Plan> plans = plannerCatalog.getPlans();
-
-        mPlanAdapter = new PlanAdapter(plans);
+        mPlanAdapter = new PlanAdapter(mUser.getPlans());
         mPlanRecyclerView.setAdapter(mPlanAdapter);
     }
 }
