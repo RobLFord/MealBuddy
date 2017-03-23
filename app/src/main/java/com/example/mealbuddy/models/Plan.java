@@ -5,9 +5,11 @@ import android.os.Parcelable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.UUID;
+import java.util.Vector;
 
 /**
  * Created by Rob Ford on 3/18/2017.
@@ -27,6 +29,7 @@ public class Plan implements Parcelable {
     private GregorianCalendar mStartDate = new GregorianCalendar();
     private GregorianCalendar mEndDate = new GregorianCalendar();
     private Duration mDuration = Duration.ONE_WEEK;
+    private DayPlan[] mDayPlans;
 
     public UUID getId() {
         return mId;
@@ -79,6 +82,20 @@ public class Plan implements Parcelable {
         updateEndDate();
     }
 
+    public void addDayPlan(DayPlan dayPlan, int index) {
+        mDayPlans[index] = dayPlan;
+    }
+
+    public Collection<DayPlan> getDayPlans() {
+        Vector<DayPlan> plans = new Vector<>(mDuration.days());
+
+        for (DayPlan plan : mDayPlans) {
+            plans.add(plan);
+        }
+
+        return plans;
+    }
+
     private void updateEndDate() {
         // Reset the end date based on the duration value
         mEndDate.setTime(mStartDate.getTime());
@@ -92,6 +109,7 @@ public class Plan implements Parcelable {
     /*
     public Plan(String startDate, Duration duration) {
         mDuration = duration;
+        mDayPlans = new DayPlan[mDuration.days()];
 
         try {
             mStartDate.setTime(PARCEL_DATE_FORMAT.parse(startDate));
@@ -105,6 +123,9 @@ public class Plan implements Parcelable {
     private Plan(Parcel in) {
         String startDate = in.readString();
         int duration = in.readInt();
+
+        mDayPlans = new DayPlan[duration];
+        in.readTypedArray(mDayPlans, DayPlan.CREATOR);
 
         try {
             mStartDate.setTime(PARCEL_DATE_FORMAT.parse(startDate));
@@ -131,6 +152,7 @@ public class Plan implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(getStartDateString());
         dest.writeInt(mDuration.days());
+        dest.writeTypedArray(mDayPlans, flags);
     }
 
     public static final Parcelable.Creator<Plan> CREATOR =
