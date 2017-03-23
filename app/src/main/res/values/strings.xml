@@ -14,4 +14,11 @@
     <string name="menu_my_meals">My Meals</string>
     <string name="menu_browse">Browse</string>
     <string name="menu_shopping_list">Shopping Lists</string>
+    <string name="plan_name_hint">Enter Plan Name</string>
+    <string name="start_date_button">Select Start Date</string>
+    <string name="plan_period_text">Plan Period</string>
+    <string name="one_week_button">1 Week</string>
+    <string name="two_week_button">2 Weeks</string>
+    <string name="serving_size_text">Serving Size</string>
+    <string name="add_plan_title">Add A Plan</string>
 </resources>

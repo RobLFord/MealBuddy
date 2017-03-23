@@ -1,13 +1,18 @@
 package com.example.mealbuddy;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +20,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mealbuddy.models.Plan;
+import com.example.mealbuddy.models.PlannerCatalog;
 import com.example.mealbuddy.models.User;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Rob Ford on 3/9/2017.
  */
 
 public class MealPlannerFragment extends Fragment {
+    private static final String TAG = "MealPlannerFragment";
+
     private RecyclerView mPlanRecyclerView;
     private PlanAdapter mPlanAdapter;
+    private FloatingActionButton mAddPlanButton;
+
     private User mUser;
 
     private static final String ARG_TEXT = "arg_text";
+    private static final String DIALOG_PLAN = "DialogPlan";
+
+    private static final int ADD_PLAN = 0;
 
     private String mText;
 
@@ -79,12 +94,7 @@ public class MealPlannerFragment extends Fragment {
         public void bind(Plan plan) {
             mPlan = plan;
             mTitleTextView.setText(mPlan.getTitle());
-        /*
-          Will need to add a method to Plan Class to calculate the period based
-          on the start and end date.
-          This is just a place holder for now
-        */
-            mDatePeriodTextView.setText(mPlan.getStartDate().toString());
+            mDatePeriodTextView.setText(mPlan.getPlanPeriod());
         }
 
         public PlanHolder(LayoutInflater inflater, ViewGroup parent) {
@@ -128,6 +138,19 @@ public class MealPlannerFragment extends Fragment {
 
         updateUI();
 
+        mAddPlanButton = (FloatingActionButton) view.findViewById(R.id.add_plan_button);
+        mAddPlanButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Plan plan = new Plan();
+                PlannerCatalog.get(getActivity()).addPlan(plan);
+                FragmentManager manager = getFragmentManager();
+                AddPlanFragment dialog = AddPlanFragment.newInstance(plan.getId());
+                dialog.setTargetFragment(MealPlannerFragment.this, ADD_PLAN);
+                dialog.show(manager, DIALOG_PLAN);
+            }
+        });
+
         return view;
     }
 
@@ -160,7 +183,27 @@ public class MealPlannerFragment extends Fragment {
     }
 
     private void updateUI() {
-        mPlanAdapter = new PlanAdapter(mUser.getPlans());
-        mPlanRecyclerView.setAdapter(mPlanAdapter);
+        PlannerCatalog plannerCatalog = PlannerCatalog.get(getActivity());
+        List<Plan> plans = plannerCatalog.getPlans();
+
+        //mPlanAdapter = new PlanAdapter(mUser.getPlans());
+        if(mPlanAdapter == null){
+            mPlanAdapter = new PlanAdapter(plans);
+            mPlanRecyclerView.setAdapter(mPlanAdapter);
+        } else {
+            mPlanAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == ADD_PLAN) {
+            updateUI();
+        }
     }
 }

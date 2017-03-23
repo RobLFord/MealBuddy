@@ -1,8 +1,6 @@
-package com.example.mealbuddy;
+package com.example.mealbuddy.models;
 
 import android.content.Context;
-
-import com.example.mealbuddy.models.Plan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +24,14 @@ public class PlannerCatalog {
 
     private PlannerCatalog(Context context){
         mPlans = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            Plan plan = new Plan();
-            plan.setTitle("Plan #" + i);
-            mPlans.add(plan);
-        }
+    }
+
+    public void addPlan(Plan plan){
+        mPlans.add(plan);
+    }
+
+    public void removePlan(Plan plan){
+        mPlans.remove(plan);
     }
 
     public List<Plan> getPlans() {

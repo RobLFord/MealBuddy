@@ -33,6 +33,10 @@ public class Plan implements Parcelable {
     }
 
     public String getTitle() {
+        return mTitle;
+    }
+
+    public String getPlanPeriod(){
         return DISPLAY_DATE_FORMAT.format(mStartDate.getTime()) + " - "
                 + DISPLAY_DATE_FORMAT.format(mEndDate.getTime());
     }
@@ -66,8 +70,12 @@ public class Plan implements Parcelable {
         return mDuration;
     }
 
-    public void setDuration(Duration duration) {
-        mDuration = duration;
+    public void setDuration(int duration) {
+        if (duration == 7){
+            mDuration = Duration.ONE_WEEK;
+        } else {
+            mDuration = Duration.TWO_WEEKS;
+        }
         updateEndDate();
     }
 
@@ -81,6 +89,7 @@ public class Plan implements Parcelable {
         mId = UUID.randomUUID(); //Using a random ID for now
     }
 
+    /*
     public Plan(String startDate, Duration duration) {
         mDuration = duration;
 
@@ -91,7 +100,7 @@ public class Plan implements Parcelable {
         }
 
         updateEndDate();
-    }
+    }*/
 
     private Plan(Parcel in) {
         String startDate = in.readString();
