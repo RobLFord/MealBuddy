@@ -1,5 +1,6 @@
 package com.example.mealbuddy;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -16,7 +17,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mealbuddy.models.Plan;
 import com.example.mealbuddy.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,6 +48,7 @@ public class LoginFragment extends Fragment {
     private TextView mForgotPasswordText;
     private TextView mForgotUsernameText;
    // private Callbacks mCallbacks;
+    private LoginListener mLoginListener;
 
     public void onLoginSelected() {
         //Log.d(TAG, "onLoginSelected");
@@ -77,17 +78,10 @@ public class LoginFragment extends Fragment {
                 if (firebase_user != null) {
                     Log.i(TAG, "User logged in: " + firebase_user.getEmail());
 
+                    mLoginListener.OnUserLogin(firebase_user.getUid());
                     //Remove when functionality for add button is in plan
                     //user.addPlan(new Plan("2017-03-19", Plan.Duration.ONE_WEEK));
                     //user.addPlan(new Plan("2017-03-26", Plan.Duration.TWO_WEEKS));
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("User", user);
-                    Fragment fragment = new MainFragment();
-                    fragment.setArguments(bundle);
-
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, fragment)
-                            .commit();
                 }
             }
         };
@@ -194,6 +188,18 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mLoginListener = (LoginListener) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException(context.toString()
+                    + " must implement LoginListener");
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
@@ -205,6 +211,9 @@ public class LoginFragment extends Fragment {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mUser.getAuthStateListener());
         }
+    }
 
+    public interface LoginListener {
+        void OnUserLogin(String uid);
     }
 }
