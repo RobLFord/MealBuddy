@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mealbuddy.models.Plan;
 import com.example.mealbuddy.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -74,11 +75,7 @@ public class LoginFragment extends Fragment {
                 FirebaseUser firebase_user = firebaseAuth.getCurrentUser();
 
                 if (firebase_user != null) {
-                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
-                    Log.i(TAG, "User logged in: " + firebaseUser.getEmail());
-
-                    User user = new User(firebaseUser.getUid());
+                    Log.i(TAG, "User logged in: " + firebase_user.getEmail());
 
                     //Remove when functionality for add button is in plan
                     //user.addPlan(new Plan("2017-03-19", Plan.Duration.ONE_WEEK));
