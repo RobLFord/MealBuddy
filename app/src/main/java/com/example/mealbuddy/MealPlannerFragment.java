@@ -145,10 +145,8 @@ public class MealPlannerFragment extends Fragment {
         mAddPlanButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Plan plan = new Plan();
-                PlannerCatalog.get(getActivity()).addPlan(plan);
                 FragmentManager manager = getFragmentManager();
-                AddPlanFragment dialog = AddPlanFragment.newInstance(plan.getId());
+                AddPlanFragment dialog = AddPlanFragment.newInstance();
                 dialog.setTargetFragment(MealPlannerFragment.this, ADD_PLAN);
                 dialog.show(manager, DIALOG_PLAN);
             }
@@ -221,10 +219,15 @@ public class MealPlannerFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
             return;
-        }
-
-        if (requestCode == ADD_PLAN) {
-            updateUI();
+        } else {
+            if (mPlannerListener != null) {
+                Plan newPlan = data.getExtras().getParcelable("NewPlan");
+                mUser.addPlan(newPlan);
+                mPlannerListener.OnAddPlan(newPlan);
+                updateUI();
+            } else {
+                Log.e(TAG, "onActivityResult: listener is null");
+            }
         }
     }
 

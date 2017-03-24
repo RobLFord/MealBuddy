@@ -48,12 +48,16 @@ public class AddPlanFragment extends DialogFragment{
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        UUID planId = (UUID) getArguments().getSerializable(ARG_PLAN_ID);
-        mPlan = PlannerCatalog.get(getActivity()).getPlan(planId);
+    public static AddPlanFragment newInstance() {
+        return new AddPlanFragment();
     }
+
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        UUID planId = (UUID) getArguments().getSerializable(ARG_PLAN_ID);
+//        mPlan = PlannerCatalog.get(getActivity()).getPlan(planId);
+//    }
 
 
     @Override
@@ -90,6 +94,7 @@ public class AddPlanFragment extends DialogFragment{
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                mPlan = new Plan();
                                 mPlan.setTitle(mPlanName.getText().toString());
 
                                 int year = mDatePicker.getYear();
@@ -125,7 +130,7 @@ public class AddPlanFragment extends DialogFragment{
         }
 
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_PLAN_ID, planId);
+        intent.putExtra("NewPlan", mPlan);
 
         getTargetFragment()
                 .onActivityResult(getTargetRequestCode(), resultCode, intent);
