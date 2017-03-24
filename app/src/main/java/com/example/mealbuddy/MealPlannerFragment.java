@@ -89,6 +89,7 @@ public class MealPlannerFragment extends Fragment {
 
         private TextView mTitleTextView;
         private TextView mDatePeriodTextView;
+        private TextView mMealCountTextView;
 
         private Plan mPlan;
 
@@ -96,6 +97,7 @@ public class MealPlannerFragment extends Fragment {
             mPlan = plan;
             mTitleTextView.setText(mPlan.getTitle());
             mDatePeriodTextView.setText(mPlan.getPlanPeriod());
+            mMealCountTextView.setText(Integer.toString(mPlan.getMealCount()));
         }
 
         public PlanHolder(LayoutInflater inflater, ViewGroup parent) {
@@ -104,6 +106,7 @@ public class MealPlannerFragment extends Fragment {
 
             mTitleTextView = (TextView) itemView.findViewById(R.id.plan_title);
             mDatePeriodTextView = (TextView) itemView.findViewById(R.id.plan_period_dates);
+            mMealCountTextView = (TextView) itemView.findViewById(R.id.plan_meal_count);
         }
 
         @Override

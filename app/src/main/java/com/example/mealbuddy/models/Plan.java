@@ -96,6 +96,19 @@ public class Plan implements Parcelable {
         return plans;
     }
 
+    public int getMealCount() {
+        int count = 0;
+
+        for (DayPlan dayPlan : mDayPlans) {
+            if (dayPlan != null) {
+                for (Recipe recipe : dayPlan.getRecipes()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     private void updateEndDate() {
         // Reset the end date based on the duration value
         mEndDate.setTime(mStartDate.getTime());

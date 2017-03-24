@@ -31,7 +31,7 @@ public class DayPlan implements Parcelable {
     }
 
     public Collection<Recipe> getRecipes() {
-        return new Vector<>(mRecipes);
+        return mRecipes;
     }
 
     public Date getDate() {
