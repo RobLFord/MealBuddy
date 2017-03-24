@@ -106,7 +106,6 @@ public class Plan implements Parcelable {
         mId = UUID.randomUUID(); //Using a random ID for now
     }
 
-    /*
     public Plan(String startDate, Duration duration) {
         mDuration = duration;
         mDayPlans = new DayPlan[mDuration.days()];
@@ -118,7 +117,7 @@ public class Plan implements Parcelable {
         }
 
         updateEndDate();
-    }*/
+    }
 
     private Plan(Parcel in) {
         String startDate = in.readString();

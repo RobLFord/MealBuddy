@@ -1,6 +1,7 @@
 package com.example.mealbuddy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -134,6 +135,8 @@ public class MealPlannerFragment extends Fragment {
         if (savedInstanceState == null) {
             Bundle args = getArguments();
             mUser = args.getParcelable("User");
+        } else {
+            mUser = savedInstanceState.getParcelable("User");
         }
 
         updateUI();
@@ -172,6 +175,7 @@ public class MealPlannerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(ARG_TEXT, mText);
+        outState.putParcelable("User", mUser);
         super.onSaveInstanceState(outState);
     }
 
@@ -183,17 +187,34 @@ public class MealPlannerFragment extends Fragment {
     }
 
     private void updateUI() {
-        PlannerCatalog plannerCatalog = PlannerCatalog.get(getActivity());
-        List<Plan> plans = plannerCatalog.getPlans();
+//        PlannerCatalog plannerCatalog = PlannerCatalog.get(getActivity());
+//        List<Plan> plans = plannerCatalog.getPlans();
+
 
         //mPlanAdapter = new PlanAdapter(mUser.getPlans());
         if(mPlanAdapter == null){
-            mPlanAdapter = new PlanAdapter(plans);
+            mPlanAdapter = new PlanAdapter(mUser.getPlans());
             mPlanRecyclerView.setAdapter(mPlanAdapter);
         } else {
             mPlanAdapter.notifyDataSetChanged();
         }
 
+    }
+
+    PlannerListener mPlannerListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Log.i(TAG, "onAttach: " + context.toString());
+
+        try {
+            mPlannerListener = (PlannerListener) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException(context.toString()
+                    + " must implement PlannerListener");
+        }
     }
 
     @Override
@@ -205,5 +226,9 @@ public class MealPlannerFragment extends Fragment {
         if (requestCode == ADD_PLAN) {
             updateUI();
         }
+    }
+
+    public interface PlannerListener {
+        void OnAddPlan(Plan newPlan);
     }
 }

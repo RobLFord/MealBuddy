@@ -32,7 +32,7 @@ public class MainFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle bundle = getArguments();
+        Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
         mUser = bundle.getParcelable("User");
         Log.i(TAG, "User: " + mUser.getUid());
     }
@@ -61,6 +61,7 @@ public class MainFragment extends Fragment{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(SELECTED_ITEM, mSelectedItem);
+        outState.putParcelable("User", mUser);
         super.onSaveInstanceState(outState);
     }
 
