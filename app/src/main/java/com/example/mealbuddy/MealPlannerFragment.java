@@ -197,6 +197,7 @@ public class MealPlannerFragment extends Fragment {
             mPlanAdapter = new PlanAdapter(mUser.getPlans());
             mPlanRecyclerView.setAdapter(mPlanAdapter);
         } else {
+            mPlanRecyclerView.setAdapter(mPlanAdapter);
             mPlanAdapter.notifyDataSetChanged();
         }
 
