@@ -103,13 +103,11 @@ public class Plan implements Parcelable {
     public int getMealCount() {
         int count = 0;
 
-//        for (DayPlan dayPlan : mDayPlans) {
-//            if (dayPlan != null) {
-//                for (Recipe recipe : dayPlan.getRecipes()) {
-//                    count++;
-//                }
-//            }
-//        }
+        for (DayPlan dayPlan : mDayPlans) {
+            for (Recipe recipe : dayPlan.getRecipes()) {
+                count++;
+            }
+        }
         return count;
     }
 
