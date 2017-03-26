@@ -49,13 +49,27 @@
                         android:textColor="@android:color/black"
                         tools:ignore="HardcodedText"/>
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/meal_for_day"
-                        android:layout_width="match_parent"
+                    <!--<android.support.v7.widget.RecyclerView-->
+                        <!--android:id="@+id/meal_for_day"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_gravity="center_horizontal"-->
+                        <!--android:layout_marginLeft="10dp"-->
+                        <!--tools:ignore="RtlHardcoded" />-->
+
+                    <EditText
+                        android:id="@+id/meal_for_day_text"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="10dp"
-                        tools:ignore="RtlHardcoded"/>
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:ems="10"
+                        android:gravity="top"
+                        android:inputType="textMultiLine"
+                        android:textAlignment="viewStart"
+                        android:textIsSelectable="false"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
             </LinearLayout>

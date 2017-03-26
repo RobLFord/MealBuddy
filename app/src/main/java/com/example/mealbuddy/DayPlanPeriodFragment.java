@@ -8,12 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mealbuddy.models.DayPlan;
-import com.example.mealbuddy.models.DayPlanPeriod;
 import com.example.mealbuddy.models.Plan;
+import com.example.mealbuddy.models.Recipe;
 
 import java.util.List;
 
@@ -73,6 +74,7 @@ public class DayPlanPeriodFragment extends Fragment {
 
         private TextView mDayOfWeekTextView;
         private TextView mDayOfMonthTextView;
+        private EditText mMealNameList;
 
         private DayPlan mDayPlan;
 
@@ -80,6 +82,12 @@ public class DayPlanPeriodFragment extends Fragment {
             mDayPlan = dayPlan;
             mDayOfWeekTextView.setText(mDayPlan.getDayOfWeek());
             mDayOfMonthTextView.setText(Integer.toString(mDayPlan.getDayOfMonth()));
+
+            StringBuffer mealText = new StringBuffer();
+            for (Recipe recipe : mDayPlan.getRecipes()) {
+                mealText.append(recipe.getName() + "\n");
+            }
+            mMealNameList.setText(mealText.toString());
         }
 
         public DayPlanHolder(LayoutInflater inflater, ViewGroup parent) {
@@ -88,6 +96,7 @@ public class DayPlanPeriodFragment extends Fragment {
 
             mDayOfWeekTextView = (TextView) itemView.findViewById(R.id.plan_period_dayOfWeek);
             mDayOfMonthTextView = (TextView) itemView.findViewById(R.id.day_of_month_textView);
+            mMealNameList = (EditText) itemView.findViewById(R.id.meal_for_day_text);
         }
 
         @Override

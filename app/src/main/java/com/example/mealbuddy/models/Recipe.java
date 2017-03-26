@@ -25,6 +25,10 @@ public class Recipe implements Parcelable {
         return new Vector<Ingredient>(mIngredients);
     }
 
+    public String getName() {
+        return mName;
+    }
+
     public Recipe(String name, int servings) {
         mName = name;
         mServings = servings;
