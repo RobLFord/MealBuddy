@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.mealbuddy.models.DayPlan;
 import com.example.mealbuddy.models.DayPlanPeriod;
+import com.example.mealbuddy.models.Plan;
 
 import java.util.List;
 
@@ -26,15 +27,17 @@ public class DayPlanPeriodFragment extends Fragment {
     private RecyclerView mDayPlanPeriodRecyclerView;
     private DayPlanAdapter mDayPlanAdapter;
     private TextView mPlanTitleDatePeriod;
+    private Plan mPlan;
 
     private static final String ARG_TEXT = "arg_text";
 
     private String mText;
 
-    public static Fragment newInstance(String text) {
+    public static Fragment newInstance(String text, Plan plan) {
         Fragment frag = new DayPlanPeriodFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, text);
+        args.putParcelable("Plan", plan);
         frag.setArguments(args);
         return frag;
     }
@@ -108,7 +111,10 @@ public class DayPlanPeriodFragment extends Fragment {
         mDayPlanPeriodRecyclerView = (RecyclerView) view.findViewById(R.id.day_plan_period_recycler_view);
         mDayPlanPeriodRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        updateUI();
+        mPlan = getArguments().getParcelable("Plan");
+
+        mDayPlanAdapter = new DayPlanAdapter(mPlan.getDayPlans());
+        mDayPlanPeriodRecyclerView.setAdapter(mDayPlanAdapter);
 
         return view;
     }
@@ -132,13 +138,5 @@ public class DayPlanPeriodFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(ARG_TEXT, mText);
         super.onSaveInstanceState(outState);
-    }
-
-    private void updateUI() {
-        DayPlanPeriod dayPlanPeriod = DayPlanPeriod.get(getActivity());
-        List<DayPlan> dayPlans = dayPlanPeriod.getDayPlans();
-
-        mDayPlanAdapter = new DayPlanAdapter(dayPlans);
-        mDayPlanPeriodRecyclerView.setAdapter(mDayPlanAdapter);
     }
 }

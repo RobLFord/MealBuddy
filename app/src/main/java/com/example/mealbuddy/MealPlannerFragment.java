@@ -113,7 +113,7 @@ public class MealPlannerFragment extends Fragment {
         public void onClick(View view){
             updateToolbarText(mPlan.getTitle());
 
-            Fragment frag = DayPlanPeriodFragment.newInstance(mPlan.getTitle());
+            Fragment frag = DayPlanPeriodFragment.newInstance(mPlan.getTitle(), mPlan);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_main_container, frag, frag.getTag());
             ft.addToBackStack(null).commit();

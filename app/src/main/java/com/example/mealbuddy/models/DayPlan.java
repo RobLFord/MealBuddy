@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -30,7 +31,12 @@ public class DayPlan implements Parcelable {
         mRecipes.add(index, recipe);
     }
 
-    public Collection<Recipe> getRecipes() {
+    public void replaceRecipes(List<Recipe> recipes) {
+        mRecipes.clear();
+        mRecipes.addAll(recipes);
+    }
+
+    public List<Recipe> getRecipes() {
         return mRecipes;
     }
 
