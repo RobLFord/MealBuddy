@@ -9,6 +9,18 @@ public class Ingredient implements Parcelable {
     private float mAmount;
     private String mUnit;
 
+    public String getName() {
+        return mIngredientName;
+    }
+
+    public float getAmount() {
+        return mAmount;
+    }
+
+    public String getUnit() {
+        return mUnit;
+    }
+
     public Ingredient(String ingredientName, float amount, String unit) {
         mIngredientName = ingredientName;
         mAmount = amount;

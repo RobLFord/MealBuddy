@@ -2,6 +2,7 @@ package com.example.mealbuddy.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Pair;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +11,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -109,6 +112,25 @@ public class Plan implements Parcelable {
             }
         }
         return count;
+    }
+
+    public Map<Pair<String, String>, Float> summarize() {
+        HashMap<Pair<String, String>, Float> ingredients = new HashMap<>();
+
+        for (DayPlan dayPlan : mDayPlans) {
+            for (Recipe recipe : dayPlan.getRecipes()) {
+                for (Ingredient ingredient : recipe.getIngredients()) {
+                    Pair<String, String> ingredientLabel = new Pair(ingredient.getName(), ingredient.getUnit());
+
+                    float tempAmount = ingredients.containsKey(ingredientLabel) ? ingredients.get(ingredientLabel) : 0.0f;
+
+                    tempAmount += ingredient.getAmount();
+                    ingredients.put(ingredientLabel, tempAmount);
+                }
+            }
+        }
+
+        return ingredients;
     }
 
     private void updateEndDate() {
