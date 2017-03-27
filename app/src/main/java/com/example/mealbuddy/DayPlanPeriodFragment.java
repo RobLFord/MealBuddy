@@ -120,7 +120,12 @@ public class DayPlanPeriodFragment extends Fragment {
         mDayPlanPeriodRecyclerView = (RecyclerView) view.findViewById(R.id.day_plan_period_recycler_view);
         mDayPlanPeriodRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mPlan = getArguments().getParcelable("Plan");
+        if (savedInstanceState == null) {
+            Bundle args = getArguments();
+            mPlan = args.getParcelable("Plan");
+        } else {
+            mPlan = savedInstanceState.getParcelable("Plan");
+        }
 
         mDayPlanAdapter = new DayPlanAdapter(mPlan.getDayPlans());
         mDayPlanPeriodRecyclerView.setAdapter(mDayPlanAdapter);

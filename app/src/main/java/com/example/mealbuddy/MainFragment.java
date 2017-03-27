@@ -90,7 +90,7 @@ public class MainFragment extends Fragment{
                 frag = BrowseFragment.newInstance(getString(R.string.menu_browse));
                 break;
             case R.id.menu_shopping_list:
-                frag = ShoppingListFragment.newInstance(getString(R.string.menu_shopping_list));
+                frag = ShoppingListFragment.newInstance(getString(R.string.menu_shopping_list), mUser);
                 break;
         }
 
