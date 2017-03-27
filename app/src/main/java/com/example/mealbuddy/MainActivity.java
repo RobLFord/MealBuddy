@@ -3,12 +3,16 @@ package com.example.mealbuddy;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.mealbuddy.models.DayPlan;
 import com.example.mealbuddy.models.Ingredient;
 import com.example.mealbuddy.models.Plan;
 import com.example.mealbuddy.models.Recipe;
 import com.example.mealbuddy.models.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -114,6 +118,28 @@ public class MainActivity extends SingleFragmentActivity
         }
 
         plan.addDayPlan(dayPlan, (int) day - 1);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout_item:
+                FirebaseAuth.getInstance().signOut();
+                Fragment fragment = new LoginFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
