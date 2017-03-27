@@ -127,6 +127,9 @@ public class DayPlanPeriodFragment extends Fragment {
             mPlan = savedInstanceState.getParcelable("Plan");
         }
 
+        mPlanTitleDatePeriod = (TextView) view.findViewById(R.id.plan_title_and_date_period);
+        mPlanTitleDatePeriod.setText(mPlan.getPlanPeriod());
+
         mDayPlanAdapter = new DayPlanAdapter(mPlan.getDayPlans());
         mDayPlanPeriodRecyclerView.setAdapter(mDayPlanAdapter);
 

@@ -117,11 +117,6 @@ public class MealPlannerFragment extends Fragment {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_main_container, frag, frag.getTag());
             ft.addToBackStack(null).commit();
-
-
-            Toast.makeText(getActivity(),
-                    mPlan.getTitle() + " clicked!", Toast.LENGTH_SHORT)
-                    .show();
         }
     }
 
