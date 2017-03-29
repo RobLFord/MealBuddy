@@ -22,4 +22,5 @@
     <string name="serving_size_text">Serving Size</string>
     <string name="add_plan_title">Add A Plan</string>
     <string name="logout">Logout</string>
+    <string name="spoonacular_key">ubiDJzZ5Gdmsh2A6pgvzs6vsPGiZp1rcUExjsn8X1tpDY1DXUp</string>
 </resources>
