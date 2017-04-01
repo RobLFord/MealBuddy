@@ -145,13 +145,13 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
                     mBrowserMeal.getTitle() + " clicked!", Toast.LENGTH_SHORT)
                     .show();
 
-            List<Ingredient> ingredients = new Vector<Ingredient>();
+            // TODO populate recipe from Spoonacular
+            List<Ingredient> ingredients = new Vector<>();
             ingredients.add(new Ingredient("Ingredient 1", 1.0f, "cup"));
             ingredients.add(new Ingredient("Ingredient 2", 2.0f, "cup"));
             Recipe newRecipe = new Recipe("Test Recipe", 4);
 
-//            mListener.OnMealAdded(newRecipe);
-            mListener.OnMealAdded(mBrowserMeal.getId());
+            mListener.OnMealAdded(newRecipe);
         }
     }
 
@@ -206,6 +206,7 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
     @Override
     public boolean onQueryTextSubmit(String query) {
         //mBrowserListAdapter.searchListFor(query);
+        // TODO search spoonacular with query
         return false;
     }
 
@@ -257,6 +258,6 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
     public interface MealBrowserListener {
-        void OnMealAdded(int id);
+        void OnMealAdded(Recipe recipe);
     }
 }

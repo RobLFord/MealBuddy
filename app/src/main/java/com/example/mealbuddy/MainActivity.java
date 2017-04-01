@@ -165,17 +165,17 @@ public class MainActivity extends SingleFragmentActivity
     }
 
     @Override
-    public void OnMealAdded(int id) {
+    public void OnMealAdded(Recipe recipe) {
         final List<Plan> plans = mUser.getPlans();
         String[] planTitles = new String[plans.size()];
         for (int i = 0; i < plans.size(); ++i) {
             planTitles[i] = plans.get(i).getTitle();
         }
 
-        showSelectPlanDialog(plans);
+        showSelectPlanDialog(plans, recipe);
     }
 
-    private void showSelectPlanDialog(final List<Plan> plans) {
+    private void showSelectPlanDialog(final List<Plan> plans, final Recipe recipe) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select a plan")
                 .setAdapter(new ArrayAdapter<Plan>(this, R.layout.plan_add_meal, plans) {
@@ -193,13 +193,13 @@ public class MainActivity extends SingleFragmentActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        showSelectDayPlanDialog(plans.get(which));
+                        showSelectDayPlanDialog(plans.get(which), recipe);
                     }
                 })
                 .show();
     }
 
-    private void showSelectDayPlanDialog(Plan plan) {
+    private void showSelectDayPlanDialog(Plan plan, final Recipe recipe) {
         final List<DayPlan> dayPlans = plan.getDayPlans();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select a day")
@@ -218,7 +218,8 @@ public class MainActivity extends SingleFragmentActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        Log.i(TAG, "Selected day");
+                        dayPlans.get(which).addRecipe(recipe);
+                        // TODO persist new recipe to Firebase when added to DayPlan list
                     }
                 })
                 .show();
