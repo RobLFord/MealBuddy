@@ -15,17 +15,24 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.example.mealbuddy.models.DayPlan;
 import com.example.mealbuddy.models.Ingredient;
 import com.example.mealbuddy.models.Plan;
 import com.example.mealbuddy.models.Recipe;
 import com.example.mealbuddy.models.User;
+import com.example.mealbuddy.utils.SpoonacularManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -165,14 +172,38 @@ public class MainActivity extends SingleFragmentActivity
     }
 
     @Override
-    public void OnMealAdded(Recipe recipe) {
-        final List<Plan> plans = mUser.getPlans();
-        String[] planTitles = new String[plans.size()];
-        for (int i = 0; i < plans.size(); ++i) {
-            planTitles[i] = plans.get(i).getTitle();
-        }
+    public void OnMealAdded(int id) {
+        SpoonacularManager manager = new SpoonacularManager(getString(R.string.spoonacular_key), this);
+        manager.requestRecipeInformation(id,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String title = response.getString("title");
+                            Recipe recipe = new Recipe(title, 0);
 
-        showSelectPlanDialog(plans, recipe);
+                            JSONArray ingredients = response.getJSONArray("extendedIngredients");
+                            for (int i = 0; i < ingredients.length(); ++i) {
+                                JSONObject ingredient = ingredients.getJSONObject(i);
+                                String name = ingredient.getString("name");
+                                float amount = (float) ingredient.getDouble("amount");
+                                String unit = ingredient.getString("unit");
+
+                                recipe.addIngredient(new Ingredient(name, amount, unit));
+                            }
+
+                            showSelectPlanDialog(mUser.getPlans(), recipe);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "Request recipe information error: " + error.toString());
+                    }
+                });
     }
 
     private void showSelectPlanDialog(final List<Plan> plans, final Recipe recipe) {
@@ -199,7 +230,7 @@ public class MainActivity extends SingleFragmentActivity
                 .show();
     }
 
-    private void showSelectDayPlanDialog(Plan plan, final Recipe recipe) {
+    private void showSelectDayPlanDialog(final Plan plan, final Recipe recipe) {
         final List<DayPlan> dayPlans = plan.getDayPlans();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select a day")
@@ -216,10 +247,36 @@ public class MainActivity extends SingleFragmentActivity
                 },
                 new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, final int which) {
                         dialog.dismiss();
                         dayPlans.get(which).addRecipe(recipe);
                         // TODO persist new recipe to Firebase when added to DayPlan list
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                        ref.child("users/" + mUser.getUid() + "/mealPlans").addListenerForSingleValueEvent(
+                                new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot planSnapshot : dataSnapshot.getChildren()) {
+                                            String start_date = (String) planSnapshot.child("startDate").getValue();
+                                            if (start_date.equals(plan.getStartDateString())) {
+                                                DataSnapshot daysSnapshot = planSnapshot.child("days");
+                                                if (daysSnapshot.getValue() == null) {
+                                                    // TODO add day with new recipe
+                                                    Log.i(TAG, "days don't exist");
+                                                } else {
+                                                    Log.i(TAG, "days exist");
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                }
+                        );
+
                     }
                 })
                 .show();

@@ -151,7 +151,7 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
             ingredients.add(new Ingredient("Ingredient 2", 2.0f, "cup"));
             Recipe newRecipe = new Recipe("Test Recipe", 4);
 
-            mListener.OnMealAdded(newRecipe);
+            mListener.OnMealAdded(mBrowserMeal.getId());
         }
     }
 
@@ -258,6 +258,6 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
     public interface MealBrowserListener {
-        void OnMealAdded(Recipe recipe);
+        void OnMealAdded(int id);
     }
 }
