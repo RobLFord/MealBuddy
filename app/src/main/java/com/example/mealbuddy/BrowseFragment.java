@@ -1,9 +1,9 @@
 package com.example.mealbuddy;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +17,13 @@ import android.widget.Toast;
 import com.example.mealbuddy.models.BrowseMealCatalog;
 import com.example.mealbuddy.models.BrowserMeal;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by Rob Ford on 3/9/2017.
@@ -32,6 +38,8 @@ public class BrowseFragment extends Fragment {
     private String mText;
     private TextView mTextView;
 
+    private MealBrowserListener mListener;
+
     public static Fragment newInstance(String text) {
         Fragment frag = new BrowseFragment();
         Bundle args = new Bundle();
@@ -41,9 +49,10 @@ public class BrowseFragment extends Fragment {
     }
 
     private class BrowserListAdapter extends RecyclerView.Adapter<BrowserListHolder> {
-        private List<BrowserMeal> mBrowserMeals;
+        private List<SpoonacularMeal> mBrowserMeals;
+        private Map<Integer, String> mMealList;
 
-        public BrowserListAdapter(List<BrowserMeal> browserMeals) {
+        public BrowserListAdapter(List<SpoonacularMeal> browserMeals) {
             mBrowserMeals = browserMeals;
         }
 
@@ -56,7 +65,7 @@ public class BrowseFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(BrowserListHolder holder, int position) {
-            BrowserMeal browserMeal = mBrowserMeals.get(position);
+            SpoonacularMeal browserMeal = mBrowserMeals.get(position);
             holder.bind(browserMeal);
         }
 
@@ -71,9 +80,9 @@ public class BrowseFragment extends Fragment {
 
         private TextView mTitleTextView;
 
-        private BrowserMeal mBrowserMeal;
+        private SpoonacularMeal mBrowserMeal;
 
-        public void bind(BrowserMeal browserMeal) {
+        public void bind(SpoonacularMeal browserMeal) {
             mBrowserMeal = browserMeal;
             mTitleTextView.setText(mBrowserMeal.getTitle());
         }
@@ -98,6 +107,8 @@ public class BrowseFragment extends Fragment {
             Toast.makeText(getActivity(),
                     mBrowserMeal.getTitle() + " clicked!", Toast.LENGTH_SHORT)
                     .show();
+
+            mListener.OnMealAdded(mBrowserMeal.getId());
         }
     }
 
@@ -134,6 +145,18 @@ public class BrowseFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mListener = (MealBrowserListener) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException(context.toString() +
+                    " must implement MealBrowserListener");
+        }
+    }
+
     private void updateToolbarText(CharSequence text) {
         ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         if (actionBar != null) {
@@ -145,7 +168,37 @@ public class BrowseFragment extends Fragment {
         BrowseMealCatalog browseMealCatalog = BrowseMealCatalog.get(getActivity());
         List<BrowserMeal> browserMeals = browseMealCatalog.getBrowserMeals();
 
-        mBrowserListAdapter = new BrowserListAdapter(browserMeals);
+        List<SpoonacularMeal> search_results = new Vector<>();
+
+        try {
+            JSONArray recipe_array = new JSONArray("[{\"id\":637876,\"title\":\"chicken 65\"},{\"id\":42569,\"title\":\"chicken bbq\"},{\"id\":74194,\"title\":\"chicken olé\"},{\"id\":83890,\"title\":\"chicken blt\"}]");
+            int recipe_count = recipe_array.length();
+            for (int i = 0; i < recipe_count; ++i) {
+                JSONObject obj = recipe_array.getJSONObject(i);
+                search_results.add(new SpoonacularMeal(obj.getInt("id"), obj.getString("title")));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mBrowserListAdapter = new BrowserListAdapter(search_results);
         mBrowserRecyclerView.setAdapter(mBrowserListAdapter);
+    }
+
+    class SpoonacularMeal {
+        private int mId;
+        private String mTitle;
+
+        public String getTitle() { return mTitle; }
+        public int getId() { return mId; }
+
+        public SpoonacularMeal(int id, String title) {
+            mId = id;
+            mTitle = title;
+        }
+    }
+
+    public interface MealBrowserListener {
+        void OnMealAdded(int id);
     }
 }

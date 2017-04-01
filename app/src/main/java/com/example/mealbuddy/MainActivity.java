@@ -1,11 +1,19 @@
 package com.example.mealbuddy;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.example.mealbuddy.models.DayPlan;
 import com.example.mealbuddy.models.Ingredient;
@@ -22,10 +30,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 public class MainActivity extends SingleFragmentActivity
-        implements LoginFragment.LoginListener, MealPlannerFragment.PlannerListener {
+        implements LoginFragment.LoginListener, MealPlannerFragment.PlannerListener,
+        BrowseFragment.MealBrowserListener {
 
     private static final String TAG = "MainActivity";
 
@@ -151,5 +161,40 @@ public class MainActivity extends SingleFragmentActivity
         planValues.put("startDate", newPlan.getStartDateString());
         planValues.put("title",  newPlan.getTitle());
         ref.push().setValue(planValues);
+    }
+
+    @Override
+    public void OnMealAdded(int id) {
+        final List<Plan> plans = mUser.getPlans();
+        String[] planTitles = new String[plans.size()];
+        for (int i = 0; i < plans.size(); ++i) {
+            planTitles[i] = plans.get(i).getTitle();
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a plan")
+                .setAdapter(new ArrayAdapter<Plan>(this, R.layout.plan_add_meal, plans) {
+                                @NonNull
+                                @Override
+                                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                                    Plan p = getItem(position);
+                                    View v = getLayoutInflater().inflate(R.layout.plan_add_meal, parent, false);
+                                    TextView t = (TextView) v.findViewById(R.id.plan_add_meal_text);
+                                    t.setText(p.getTitle() + " - " + p.getPlanPeriod());
+                                    return v;
+                                }
+                            },
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                showDayPickerDialog(plans.get(which));
+                            }
+                        })
+                .show();
+    }
+
+    private void showDayPickerDialog(Plan plan) {
+        Log.i(TAG, "showDayPickerDialog " + plan.getDayPlans().size());
     }
 }
