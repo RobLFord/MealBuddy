@@ -24,11 +24,11 @@ public class BrowseMealCatalog {
 
     private BrowseMealCatalog(Context context){
         mBrowserMeals = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        /*for (int i = 0; i < 10; i++) {
             BrowserMeal browserMeal = new BrowserMeal();
             browserMeal.setTitle("Browser Meal #" + i);
             mBrowserMeals.add(browserMeal);
-        }
+        }*/
     }
 
     public List<BrowserMeal> getBrowserMeals() {
@@ -42,5 +42,9 @@ public class BrowseMealCatalog {
             }
         }
         return null;
+    }
+
+    public void addBrowserMeal(BrowserMeal browserMeal){
+        mBrowserMeals.add(browserMeal);
     }
 }

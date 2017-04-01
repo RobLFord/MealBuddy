@@ -8,6 +8,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +23,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.Locale;
 
 /**
  * Created by Rob Ford on 3/9/2017.
  */
 
-public class BrowseFragment extends Fragment {
+public class BrowseFragment extends Fragment implements SearchView.OnQueryTextListener {
+    private static final String TAG = "BrowseFragment";
+
     private RecyclerView mBrowserRecyclerView;
     private BrowserListAdapter mBrowserListAdapter;
 
@@ -37,6 +43,12 @@ public class BrowseFragment extends Fragment {
 
     private String mText;
     private TextView mTextView;
+    private SearchView mSearchView;
+
+    private BrowseMealCatalog mBrowseMealCatalog;
+    private List<BrowserMeal> mBrowserMeals;
+
+    private String[] mBrowserMealList;
 
     private MealBrowserListener mListener;
 
@@ -73,6 +85,32 @@ public class BrowseFragment extends Fragment {
         public int getItemCount() {
             return mBrowserMeals.size();
         }
+
+        public void searchListFor(String stringText){
+            List<BrowserMeal> mealArrayList;
+            stringText = stringText.toLowerCase();
+
+            mBrowserMealsListAdapter.clear();
+
+            mealArrayList = new ArrayList<>();
+            for (int i = 0; i < mBrowserMealList.length; i++) {
+                BrowserMeal browserMeal = new BrowserMeal();
+                browserMeal.setTitle(mBrowserMealList[i]);
+                mealArrayList.add(browserMeal);
+            }
+
+            if (stringText.length() == 0) {
+                mBrowserMealsListAdapter.addAll(mealArrayList);
+            } else {
+                for (BrowserMeal browserMeal : mealArrayList) {
+                    if (browserMeal.getTitle().trim().toLowerCase().contains(stringText)) {
+                        mBrowserMealsListAdapter.add(browserMeal);
+                    }
+                }
+            }
+            notifyDataSetChanged();
+        }
+
     }
 
     private class BrowserListHolder extends RecyclerView.ViewHolder
@@ -121,6 +159,9 @@ public class BrowseFragment extends Fragment {
         mBrowserRecyclerView = (RecyclerView) view.findViewById(R.id.browse_recycler_view);
         mBrowserRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        mSearchView = (SearchView) view.findViewById(R.id.browser_searchView);
+        mSearchView.setOnQueryTextListener(this);
+
         updateUI();
 
         return view;
@@ -155,6 +196,18 @@ public class BrowseFragment extends Fragment {
             throw new ClassCastException(context.toString() +
                     " must implement MealBrowserListener");
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        //mBrowserListAdapter.searchListFor(query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mBrowserListAdapter.searchListFor(newText);
+        return false;
     }
 
     private void updateToolbarText(CharSequence text) {
