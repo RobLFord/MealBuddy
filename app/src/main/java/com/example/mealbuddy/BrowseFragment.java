@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +17,16 @@ import android.widget.Toast;
 
 import com.example.mealbuddy.models.BrowseMealCatalog;
 import com.example.mealbuddy.models.BrowserMeal;
+import com.example.mealbuddy.models.Ingredient;
+import com.example.mealbuddy.models.Recipe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.Locale;
 
 /**
  * Created by Rob Ford on 3/9/2017.
@@ -87,28 +86,28 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
         }
 
         public void searchListFor(String stringText){
-            List<BrowserMeal> mealArrayList;
-            stringText = stringText.toLowerCase();
-
-            mBrowserMealsListAdapter.clear();
-
-            mealArrayList = new ArrayList<>();
-            for (int i = 0; i < mBrowserMealList.length; i++) {
-                BrowserMeal browserMeal = new BrowserMeal();
-                browserMeal.setTitle(mBrowserMealList[i]);
-                mealArrayList.add(browserMeal);
-            }
-
-            if (stringText.length() == 0) {
-                mBrowserMealsListAdapter.addAll(mealArrayList);
-            } else {
-                for (BrowserMeal browserMeal : mealArrayList) {
-                    if (browserMeal.getTitle().trim().toLowerCase().contains(stringText)) {
-                        mBrowserMealsListAdapter.add(browserMeal);
-                    }
-                }
-            }
-            notifyDataSetChanged();
+//            List<BrowserMeal> mealArrayList;
+//            stringText = stringText.toLowerCase();
+//
+//            mBrowserMealsListAdapter.clear();
+//
+//            mealArrayList = new ArrayList<>();
+//            for (int i = 0; i < mBrowserMealList.length; i++) {
+//                BrowserMeal browserMeal = new BrowserMeal();
+//                browserMeal.setTitle(mBrowserMealList[i]);
+//                mealArrayList.add(browserMeal);
+//            }
+//
+//            if (stringText.length() == 0) {
+//                mBrowserMealsListAdapter.addAll(mealArrayList);
+//            } else {
+//                for (BrowserMeal browserMeal : mealArrayList) {
+//                    if (browserMeal.getTitle().trim().toLowerCase().contains(stringText)) {
+//                        mBrowserMealsListAdapter.add(browserMeal);
+//                    }
+//                }
+//            }
+//            notifyDataSetChanged();
         }
 
     }
@@ -146,6 +145,12 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
                     mBrowserMeal.getTitle() + " clicked!", Toast.LENGTH_SHORT)
                     .show();
 
+            List<Ingredient> ingredients = new Vector<Ingredient>();
+            ingredients.add(new Ingredient("Ingredient 1", 1.0f, "cup"));
+            ingredients.add(new Ingredient("Ingredient 2", 2.0f, "cup"));
+            Recipe newRecipe = new Recipe("Test Recipe", 4);
+
+//            mListener.OnMealAdded(newRecipe);
             mListener.OnMealAdded(mBrowserMeal.getId());
         }
     }

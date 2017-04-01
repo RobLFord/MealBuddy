@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -171,30 +172,55 @@ public class MainActivity extends SingleFragmentActivity
             planTitles[i] = plans.get(i).getTitle();
         }
 
+        showSelectPlanDialog(plans);
+    }
+
+    private void showSelectPlanDialog(final List<Plan> plans) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select a plan")
                 .setAdapter(new ArrayAdapter<Plan>(this, R.layout.plan_add_meal, plans) {
-                                @NonNull
-                                @Override
-                                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                                    Plan p = getItem(position);
-                                    View v = getLayoutInflater().inflate(R.layout.plan_add_meal, parent, false);
-                                    TextView t = (TextView) v.findViewById(R.id.plan_add_meal_text);
-                                    t.setText(p.getTitle() + " - " + p.getPlanPeriod());
-                                    return v;
-                                }
-                            },
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                showDayPickerDialog(plans.get(which));
-                            }
-                        })
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        Plan p = getItem(position);
+                        View v = getLayoutInflater().inflate(R.layout.plan_add_meal, parent, false);
+                        TextView t = (TextView) v.findViewById(R.id.plan_add_meal_text);
+                        t.setText(p.getTitle() + " - " + p.getPlanPeriod());
+                        return v;
+                    }
+                },
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        showSelectDayPlanDialog(plans.get(which));
+                    }
+                })
                 .show();
     }
 
-    private void showDayPickerDialog(Plan plan) {
-        Log.i(TAG, "showDayPickerDialog " + plan.getDayPlans().size());
+    private void showSelectDayPlanDialog(Plan plan) {
+        final List<DayPlan> dayPlans = plan.getDayPlans();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a day")
+                .setAdapter(new ArrayAdapter<DayPlan>(this, R.layout.plan_add_meal, dayPlans) {
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        DayPlan dp = getItem(position);
+                        View v = getLayoutInflater().inflate(R.layout.plan_add_meal, parent, false);
+                        TextView t = (TextView) v.findViewById(R.id.plan_add_meal_text);
+                        t.setText(dp.getDayOfWeek() + ", " + new SimpleDateFormat("MMM dd, yyyy").format(dp.getDate()));
+                        return v;
+                    }
+                },
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Log.i(TAG, "Selected day");
+                    }
+                })
+                .show();
     }
 }
