@@ -44,6 +44,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+/**
+ * Class : MainActivity
+ *
+ * Description :
+ *
+ * This Activity responsible for passing data between the fragments and the Classes located in
+ * models. Also this Activity is responsible for calling the fragment. This Activity is called
+ * when the MealBuddy App is launched.
+ *
+ */
+
 public class MainActivity extends SingleFragmentActivity
         implements LoginFragment.LoginListener, MealPlannerFragment.PlannerListener,
         BrowseFragment.MealBrowserListener {

@@ -33,7 +33,15 @@ import java.util.Map;
 import java.util.Vector;
 
 /**
- * Created by Rob Ford on 3/9/2017.
+ * Class : BrowseFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation for browsing meals.
+ * The purpose of this fragment is to allow the user to search for meals using the
+ * spoonacular API. This fragment is called when the user selects the Browse button on the
+ * bottom navigation bar.
+ *
  */
 
 public class BrowseFragment extends Fragment implements SearchView.OnQueryTextListener {
@@ -87,31 +95,6 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
         @Override
         public int getItemCount() {
             return mBrowserMeals.size();
-        }
-
-        public void searchListFor(String stringText){
-//            List<BrowserMeal> mealArrayList;
-//            stringText = stringText.toLowerCase();
-//
-//            mBrowserMealsListAdapter.clear();
-//
-//            mealArrayList = new ArrayList<>();
-//            for (int i = 0; i < mBrowserMealList.length; i++) {
-//                BrowserMeal browserMeal = new BrowserMeal();
-//                browserMeal.setTitle(mBrowserMealList[i]);
-//                mealArrayList.add(browserMeal);
-//            }
-//
-//            if (stringText.length() == 0) {
-//                mBrowserMealsListAdapter.addAll(mealArrayList);
-//            } else {
-//                for (BrowserMeal browserMeal : mealArrayList) {
-//                    if (browserMeal.getTitle().trim().toLowerCase().contains(stringText)) {
-//                        mBrowserMealsListAdapter.add(browserMeal);
-//                    }
-//                }
-//            }
-//            notifyDataSetChanged();
         }
 
     }

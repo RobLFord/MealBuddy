@@ -31,7 +31,15 @@ import java.util.Map;
 
 
 /**
- * Created by rf122 on 3/6/2017.
+ * Class : LoginFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation for the login screen.
+ * The purpose of this fragment is to display the login screen and pass the user's login
+ * information to the Firebase server for authentication.
+ * This fragment is called ...
+ *
  */
 
 public class LoginFragment extends Fragment {
@@ -79,9 +87,6 @@ public class LoginFragment extends Fragment {
                     Log.i(TAG, "User logged in: " + firebase_user.getEmail());
 
                     mLoginListener.OnUserLogin(firebase_user.getUid());
-                    //Remove when functionality for add button is in plan
-                    //user.addPlan(new Plan("2017-03-19", Plan.Duration.ONE_WEEK));
-                    //user.addPlan(new Plan("2017-03-26", Plan.Duration.TWO_WEEKS));
                 }
             }
         };

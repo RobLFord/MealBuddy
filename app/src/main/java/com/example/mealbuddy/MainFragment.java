@@ -16,7 +16,14 @@ import android.view.ViewGroup;
 import com.example.mealbuddy.models.User;
 
 /**
- * Created by Rob Ford on 3/8/2017.
+ * Class : MainFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation for the navigation bar.
+ * The purpose of this fragment is display the navigation bar and provide a container for other
+ * fragments to display in when called. This fragment is called after the user login.
+ *
  */
 
 public class MainFragment extends Fragment{

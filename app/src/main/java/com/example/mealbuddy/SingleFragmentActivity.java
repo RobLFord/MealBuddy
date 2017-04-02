@@ -7,7 +7,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by Rob Ford on 3/7/2017.
+ * Class : SingleFragmentActivity
+ *
+ * Description :
+ *
+ * The purpose of this class is to create and display a fragment from within
+ * an activity.
+ *
  */
 
 public abstract class SingleFragmentActivity extends AppCompatActivity {

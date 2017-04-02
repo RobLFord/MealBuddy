@@ -29,7 +29,16 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Rob Ford on 3/9/2017.
+ * Class : MealPlannerFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation for the planner screen
+ * The purpose of this fragment is to display all of the plan that the user
+ * has create and allow the user to create plans.
+ * This fragment is called when the planner button is selected in the
+ * bottom navigation bar.
+ *
  */
 
 public class MealPlannerFragment extends Fragment {
