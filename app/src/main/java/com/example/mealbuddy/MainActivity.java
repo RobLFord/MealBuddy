@@ -253,7 +253,6 @@ public class MainActivity extends SingleFragmentActivity
                     public void onClick(DialogInterface dialog, final int which) {
                         dialog.dismiss();
                         dayPlans.get(which).addRecipe(recipe);
-                        // TODO persist new recipe to Firebase when added to DayPlan list
                         addRecipeToDatabase(plan, which, recipe);
 
                     }

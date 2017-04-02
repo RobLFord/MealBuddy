@@ -9,16 +9,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.example.mealbuddy.models.BrowseMealCatalog;
 import com.example.mealbuddy.models.BrowserMeal;
 import com.example.mealbuddy.models.Ingredient;
 import com.example.mealbuddy.models.Recipe;
+import com.example.mealbuddy.utils.SpoonacularManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -133,24 +137,6 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
 
         @Override
         public void onClick(View view){
-            //Comment stuff will get used when SelectedBrowserMealFragment is updated
-            //updateToolbarText(mBrowserMeal.getTitle());
-
-            //Fragment frag = SelectedBrowserMealFragment.newInstance(mBrowserMeal.getTitle());
-            //FragmentTransaction ft = getFragmentManager().beginTransaction();
-            //ft.replace(R.id.fragment_main_container, frag, frag.getTag());
-            //ft.commit();
-
-            Toast.makeText(getActivity(),
-                    mBrowserMeal.getTitle() + " clicked!", Toast.LENGTH_SHORT)
-                    .show();
-
-            // TODO populate recipe from Spoonacular
-            List<Ingredient> ingredients = new Vector<>();
-            ingredients.add(new Ingredient("Ingredient 1", 1.0f, "cup"));
-            ingredients.add(new Ingredient("Ingredient 2", 2.0f, "cup"));
-            Recipe newRecipe = new Recipe("Test Recipe", 4);
-
             mListener.OnMealAdded(mBrowserMeal.getId());
         }
     }
@@ -166,8 +152,6 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
 
         mSearchView = (SearchView) view.findViewById(R.id.browser_searchView);
         mSearchView.setOnQueryTextListener(this);
-
-        updateUI();
 
         return view;
     }
@@ -205,14 +189,40 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        //mBrowserListAdapter.searchListFor(query);
-        // TODO search spoonacular with query
-        return false;
+        SpoonacularManager manager = new SpoonacularManager(getString(R.string.spoonacular_key), getContext());
+        manager.requestAutoCompleteRecipes(10, query,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        List<SpoonacularMeal> search_results = new Vector<>();
+
+                        try {
+                            int recipe_count = response.length();
+                            for (int i = 0; i < recipe_count; ++i) {
+                                JSONObject recipe_object = response.getJSONObject(i);
+                                search_results.add(new SpoonacularMeal(recipe_object.getInt("id"),
+                                        recipe_object.getString("title")));
+                            }
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Error parsing search reasults");
+                            e.printStackTrace();
+                        }
+
+                        mBrowserListAdapter = new BrowserListAdapter(search_results);
+                        mBrowserRecyclerView.setAdapter(mBrowserListAdapter);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.w(TAG, "Query request cancelled");
+                    }
+                });
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mBrowserListAdapter.searchListFor(newText);
         return false;
     }
 

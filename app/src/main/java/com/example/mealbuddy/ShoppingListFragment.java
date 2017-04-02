@@ -3,6 +3,7 @@ package com.example.mealbuddy;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,7 @@ public class ShoppingListFragment extends Fragment {
         }
 
         TextView shoppingLists = (TextView) view.findViewById(R.id.shopping_list_text);
+        shoppingLists.setMovementMethod(new ScrollingMovementMethod());
 
         StringBuffer listStringBuffer = new StringBuffer();
 
