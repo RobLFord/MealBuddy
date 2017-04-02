@@ -29,6 +29,8 @@ public class Recipe implements Parcelable {
         return mName;
     }
 
+    public int getServings() { return mServings; }
+
     public Recipe(String name, int servings) {
         mName = name;
         mServings = servings;

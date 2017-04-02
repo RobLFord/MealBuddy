@@ -28,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
@@ -35,10 +36,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 public class MainActivity extends SingleFragmentActivity
@@ -251,34 +254,74 @@ public class MainActivity extends SingleFragmentActivity
                         dialog.dismiss();
                         dayPlans.get(which).addRecipe(recipe);
                         // TODO persist new recipe to Firebase when added to DayPlan list
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                        ref.child("users/" + mUser.getUid() + "/mealPlans").addListenerForSingleValueEvent(
-                                new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        for (DataSnapshot planSnapshot : dataSnapshot.getChildren()) {
-                                            String start_date = (String) planSnapshot.child("startDate").getValue();
-                                            if (start_date.equals(plan.getStartDateString())) {
-                                                DataSnapshot daysSnapshot = planSnapshot.child("days");
-                                                if (daysSnapshot.getValue() == null) {
-                                                    // TODO add day with new recipe
-                                                    Log.i(TAG, "days don't exist");
-                                                } else {
-                                                    Log.i(TAG, "days exist");
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                }
-                        );
+                        addRecipeToDatabase(plan, which, recipe);
 
                     }
                 })
                 .show();
+    }
+
+    private void addRecipeToDatabase(final Plan plan, final int which, final Recipe recipe) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.child("users/" + mUser.getUid() + "/mealPlans").addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Iterate through the user's meal plans to find the correct plan to add meal to
+                        for (DataSnapshot planSnapshot : dataSnapshot.getChildren()) {
+                            String start_date = (String) planSnapshot.child("startDate").getValue();
+                            DataSnapshot daysSnapshot = null;
+                            if (start_date.equals(plan.getStartDateString())) {
+                                daysSnapshot = planSnapshot.child("days");
+                            }
+
+                            List<Map<String, Object>> days;
+                            if (daysSnapshot == null) {
+                                days = new Vector<>();
+                                Log.i(TAG, "days don't exist");
+                            } else {
+                                Log.i(TAG, "days exist");
+                                days = daysSnapshot.getValue(new GenericTypeIndicator<List<Map<String, Object>>>() {});
+                            }
+
+                            for (Map<String, Object> day : days) {
+                                Log.i(TAG, "Found day");
+                                if (day != null && (Long) day.get("day") == (which + 1)) {
+                                    List<Map<String, Object>> mealsList = (List<Map<String, Object>>) day.get("meals");
+
+                                    // Add new recipe to list
+                                    Map<String, Object> newMeal = new HashMap<>();
+                                    newMeal.put("name", recipe.getName());
+                                    newMeal.put("servings", recipe.getServings());
+
+                                    List<Map<String, Object>> ingredientsList = new Vector<>();
+                                    for (Ingredient ingredient : recipe.getIngredients()) {
+                                        Map<String, Object> ingredientMap = new HashMap<>();
+                                        ingredientMap.put("amount", ingredient.getAmount());
+                                        ingredientMap.put("name", ingredient.getName());
+                                        ingredientMap.put("unit", ingredient.getUnit());
+                                        ingredientsList.add(ingredientMap);
+                                    }
+
+                                    newMeal.put("ingredients", ingredientsList);
+
+                                    mealsList.add(newMeal);
+                                }
+                            }
+
+                            if (daysSnapshot != null) {
+                                daysSnapshot.getRef().setValue(days);
+                            } else {
+                                Log.e(TAG, "NULL days snapshot");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
     }
 }
