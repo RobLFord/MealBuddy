@@ -365,54 +365,53 @@ public class MainActivity extends SingleFragmentActivity
                             DataSnapshot daysSnapshot = null;
                             if (start_date.equals(plan.getStartDateString())) {
                                 daysSnapshot = planSnapshot.child("days");
-                            }
-
-                            // Create new recipe to add
-                            Map<String, Object> newMeal = new HashMap<>();
-                            newMeal.put("name", recipe.getName());
-                            newMeal.put("servings", recipe.getServings());
-
-                            // Extract the ingredients
-                            List<Map<String, Object>> ingredientsList = new Vector<>();
-                            for (Ingredient ingredient : recipe.getIngredients()) {
-                                Map<String, Object> ingredientMap = new HashMap<>();
-                                ingredientMap.put("amount", ingredient.getAmount());
-                                ingredientMap.put("name", ingredient.getName());
-                                ingredientMap.put("unit", ingredient.getUnit());
-                                ingredientsList.add(ingredientMap);
-                            }
-
-                            newMeal.put("ingredients", ingredientsList);
-
-                            // Get the list of days from the database for the given plan. If there
-                            // are no days for the current plan, use an empty vector instead.
-                            List<Map<String, Object>> days;
-                            if (daysSnapshot == null) {
-                                List<Map<String, Object>> meals = new Vector<>();
-                                meals.add(newMeal);
-
-                                days = new Vector<>();
-                                Map<String, Object> day = new HashMap<>();
-                                day.put("day", which + 1);
-                                day.put("meals", meals);
-
-                                days.add(day);
-                            } else {
-                                days = daysSnapshot.getValue(new GenericTypeIndicator<List<Map<String, Object>>>() {
-                                });
 
 
-                                for (Map<String, Object> day : days) {
-                                    Log.i(TAG, "Found day");
-                                    if (day != null && (Long) day.get("day") == (which + 1)) {
-                                        List<Map<String, Object>> mealsList = (List<Map<String, Object>>) day.get("meals");
+                                // Create new recipe to add
+                                Map<String, Object> newMeal = new HashMap<>();
+                                newMeal.put("name", recipe.getName());
+                                newMeal.put("servings", recipe.getServings());
 
-                                        mealsList.add(newMeal);
+                                // Extract the ingredients
+                                List<Map<String, Object>> ingredientsList = new Vector<>();
+                                for (Ingredient ingredient : recipe.getIngredients()) {
+                                    Map<String, Object> ingredientMap = new HashMap<>();
+                                    ingredientMap.put("amount", ingredient.getAmount());
+                                    ingredientMap.put("name", ingredient.getName());
+                                    ingredientMap.put("unit", ingredient.getUnit());
+                                    ingredientsList.add(ingredientMap);
+                                }
+
+                                newMeal.put("ingredients", ingredientsList);
+
+                                // Get the list of days from the database for the given plan. If there
+                                // are no days for the current plan, use an empty vector instead.
+                                List<Map<String, Object>> days;
+                                if (!daysSnapshot.exists()) {
+                                    List<Map<String, Object>> meals = new Vector<>();
+                                    meals.add(newMeal);
+
+                                    days = new Vector<>();
+                                    Map<String, Object> day = new HashMap<>();
+                                    day.put("day", which + 1);
+                                    day.put("meals", meals);
+
+                                    days.add(day);
+                                } else {
+                                    days = daysSnapshot.getValue(new GenericTypeIndicator<List<Map<String, Object>>>() {});
+
+                                    for (Map<String, Object> day : days) {
+                                        Log.i(TAG, "Found day");
+                                        if (day != null && (Long) day.get("day") == (which + 1)) {
+                                            List<Map<String, Object>> mealsList = (List<Map<String, Object>>) day.get("meals");
+
+                                            mealsList.add(newMeal);
+                                        }
                                     }
                                 }
-                            }
 
-                            planSnapshot.getRef().child("days").setValue(days);
+                                planSnapshot.getRef().child("days").setValue(days);
+                            }
                         }
                     }
 
