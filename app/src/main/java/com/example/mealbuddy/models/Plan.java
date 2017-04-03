@@ -70,7 +70,7 @@ public class Plan implements Parcelable {
     /**
      * The days within the plan.
      */
-    private ArrayList<DayPlan> mDayPlans;
+    private ArrayList<DayPlan> mDayPlans = new ArrayList<>();
 
     /**
      * Get the plan UID.
@@ -244,11 +244,12 @@ public class Plan implements Parcelable {
     }
 
     /**
-     * Create a new plan object with a unique UID.
+     * Create a new plan that starts on the given date and for the given duration.
+     * @param date the date the plan starts on
+     * @param duration the duration of the plan
      */
-    public Plan() {
-        mId = UUID.randomUUID(); //Using a random ID for now
-        mDayPlans = new ArrayList<>();
+    public Plan(Date date, Duration duration) {
+        this(PARCEL_DATE_FORMAT.format(date), duration);
     }
 
     /**
@@ -257,7 +258,7 @@ public class Plan implements Parcelable {
      * @param duration the duration of the plan
      */
     public Plan(String startDate, Duration duration) {
-        this();
+        mId = UUID.randomUUID(); //Using a random ID for now
 
         try {
             mStartDate.setTime(PARCEL_DATE_FORMAT.parse(startDate));

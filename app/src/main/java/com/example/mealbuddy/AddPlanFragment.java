@@ -96,21 +96,21 @@ public class AddPlanFragment extends DialogFragment{
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                mPlan = new Plan();
-                                mPlan.setTitle(mPlanName.getText().toString());
-
                                 int year = mDatePicker.getYear();
                                 int month = mDatePicker.getMonth();
                                 int day = mDatePicker.getDayOfMonth();
                                 Date date = new GregorianCalendar(year, month, day).getTime();
 
-                                mPlan.setStartDate(date);
+                                Plan.Duration duration = Plan.Duration.ONE_WEEK;
 
                                 if(mOneWeekButton.isChecked()){
-                                    mPlan.setDuration(7);
+                                    duration = Plan.Duration.ONE_WEEK;
                                 } else if(mTwoWeeksButton.isChecked()){
-                                    mPlan.setDuration(14);
+                                    duration = Plan.Duration.TWO_WEEKS;
                                 }
+
+                                mPlan = new Plan(date, duration);
+                                mPlan.setTitle(mPlanName.getText().toString());
 
                                 //Need to add method to plan to receive serving size
                                 //mServingSize.getText().toString();
