@@ -29,18 +29,39 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Rob Ford on 3/9/2017.
+ * Class : MealPlannerFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation for the planner screen
+ * The purpose of this fragment is to display all of the plan that the user
+ * has create and allow the user to create plans.
+ * This fragment is called when the planner button is selected in the
+ * bottom navigation bar.
+ *
  */
 
 public class MealPlannerFragment extends Fragment {
+    /**
+     * String for debug log
+     */
     private static final String TAG = "MealPlannerFragment";
 
+    // Recycler view and associated adapter for displaying meal plans.
     private RecyclerView mPlanRecyclerView;
     private PlanAdapter mPlanAdapter;
+
+    /**
+     * Add meal plan button
+     */
     private FloatingActionButton mAddPlanButton;
 
+    /**
+     * The user data
+     */
     private User mUser;
 
+    // Labels for saving data to bundle
     private static final String ARG_TEXT = "arg_text";
     private static final String DIALOG_PLAN = "DialogPlan";
 
@@ -48,7 +69,12 @@ public class MealPlannerFragment extends Fragment {
 
     private String mText;
 
-
+    /**
+     * Create a new instance of this fragment
+     * @param text the fragment label
+     * @param user data for the current user
+     * @return an instance of this fragment
+     */
     public static Fragment newInstance(String text, User user) {
         Fragment frag = new MealPlannerFragment();
         Bundle args = new Bundle();
@@ -58,9 +84,19 @@ public class MealPlannerFragment extends Fragment {
         return frag;
     }
 
+    /**
+     * Adapter used to populate the plan RecyclerView.
+     */
     private class PlanAdapter extends RecyclerView.Adapter<PlanHolder> {
+        /**
+         * List of plans for the RecyclerAdapter
+         */
         private List<Plan> mPlans;
 
+        /**
+         * Creates a new instance of the adapter to display the given plans.
+         * @param plans the plans to populate this adapter with
+         */
         public PlanAdapter(List<Plan> plans) {
             mPlans = plans;
         }
@@ -84,13 +120,20 @@ public class MealPlannerFragment extends Fragment {
         }
     }
 
+    /**
+     * ViewHolder to populate data for an individual card of the RecyclerView adapter.
+     */
     private class PlanHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener{
 
+        // View items within the card
         private TextView mTitleTextView;
         private TextView mDatePeriodTextView;
         private TextView mMealCountTextView;
 
+        /**
+         * The plan for this particular card.
+         */
         private Plan mPlan;
 
         public void bind(Plan plan) {
@@ -113,6 +156,7 @@ public class MealPlannerFragment extends Fragment {
         public void onClick(View view){
             updateToolbarText(mPlan.getTitle());
 
+            // Load the meal detail fragment
             Fragment frag = DayPlanPeriodFragment.newInstance(mPlan.getTitle(), mPlan);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_main_container, frag, frag.getTag());
@@ -183,11 +227,6 @@ public class MealPlannerFragment extends Fragment {
     }
 
     private void updateUI() {
-//        PlannerCatalog plannerCatalog = PlannerCatalog.get(getActivity());
-//        List<Plan> plans = plannerCatalog.getPlans();
-
-
-        //mPlanAdapter = new PlanAdapter(mUser.getPlans());
         if(mPlanAdapter == null){
             mPlanAdapter = new PlanAdapter(mUser.getPlans());
             mPlanRecyclerView.setAdapter(mPlanAdapter);
@@ -230,6 +269,9 @@ public class MealPlannerFragment extends Fragment {
         }
     }
 
+    /**
+     * Interface used for callback when a new meal is added by the user.
+     */
     public interface PlannerListener {
         void OnAddPlan(Plan newPlan);
     }

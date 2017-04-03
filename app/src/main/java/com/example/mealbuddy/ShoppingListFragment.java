@@ -19,13 +19,23 @@ import java.util.Map;
  * Created by Rob Ford on 3/9/2017.
  */
 
+/**
+ * Fragment that displays the summarized data as a shopping list for the user's plans
+ */
 public class ShoppingListFragment extends Fragment {
     private static final String ARG_TEXT = "arg_text";
 
+    // UI items
     private String mText;
     private TextView mTextView;
     private User mUser;
 
+    /**
+     * Creates a new instance of the fragment
+     * @param text fragment label
+     * @param user User data for the current logged in user
+     * @return
+     */
     public static Fragment newInstance(String text, User user) {
         Fragment frag = new ShoppingListFragment();
         Bundle args = new Bundle();
@@ -62,7 +72,10 @@ public class ShoppingListFragment extends Fragment {
 
         StringBuffer listStringBuffer = new StringBuffer();
 
+        // Summarize the ingredients of the user's plans for display
         for (Plan plan : mUser.getPlans()) {
+
+            // Collect the summarized ingredients in a map.
             Map<Pair<String, String>, Float> ingredients = plan.summarize();
 
             listStringBuffer.append(String.format("%s: %s\n", plan.getTitle(), plan.getPlanPeriod()));
@@ -78,6 +91,7 @@ public class ShoppingListFragment extends Fragment {
             listStringBuffer.append("\n");
         }
 
+        // Update the text view to display the info
         shoppingLists.setText(listStringBuffer.toString());
     }
 

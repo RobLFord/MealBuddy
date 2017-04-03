@@ -14,6 +14,9 @@ import android.widget.EditText;
  * Created by Rob Ford on 3/7/2017.
  */
 
+/**
+ * Fragment that presents a dialog for creating an account by entering a username and password.
+ */
 public class SignUpFragment extends DialogFragment {
 
     private EditText mEmailText;
@@ -31,6 +34,8 @@ public class SignUpFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        // Display the dialog to the user
         View v = LayoutInflater.from(getActivity())
                 .inflate(R.layout.fragment_signup, null);
 

@@ -10,6 +10,9 @@ import android.support.v7.app.AppCompatActivity;
  * Created by Rob Ford on 3/7/2017.
  */
 
+/**
+ * Abstract class for an Activity that displays a single fragment in its layout
+ */
 public abstract class SingleFragmentActivity extends AppCompatActivity {
 
     protected abstract Fragment createFragment();

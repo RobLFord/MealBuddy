@@ -16,11 +16,26 @@ import android.view.ViewGroup;
 import com.example.mealbuddy.models.User;
 
 /**
- * Created by Rob Ford on 3/8/2017.
+ * Class : MainFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation for the navigation bar.
+ * The purpose of this fragment is display the navigation bar and provide a container for other
+ * fragments to display in when called. This fragment is called after the user login.
+ *
  */
 
 public class MainFragment extends Fragment{
+
+    /**
+     * String tag for debug logs
+     */
     private static final String TAG = "MainFragment";
+
+    /**
+     * Argument label for storing selected item in a bundle.
+     */
     private static final String SELECTED_ITEM = "arg_selected_item";
 
     private BottomNavigationView mBottomNav;
@@ -32,6 +47,7 @@ public class MainFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Retrieve the user from the bundle
         Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
         mUser = bundle.getParcelable("User");
         Log.i(TAG, "User: " + mUser.getUid());
@@ -52,6 +68,7 @@ public class MainFragment extends Fragment{
         });
 
 
+        // Set up the bottom navigation
         selectFragment(mBottomNav.getMenu().findItem(R.id.menu_meal_planner));
         mBottomNav.getMenu().findItem(R.id.menu_meal_planner).setChecked(true);
 
@@ -97,6 +114,7 @@ public class MainFragment extends Fragment{
 
         updateToolbarText(item.getTitle());
 
+        // Load the selected fragment
         if (frag != null) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_main_container, frag, frag.getTag());

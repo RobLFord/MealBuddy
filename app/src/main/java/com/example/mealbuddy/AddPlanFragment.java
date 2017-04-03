@@ -22,7 +22,15 @@ import java.util.GregorianCalendar;
 import java.util.UUID;
 
 /**
- * Created by Rob Ford on 3/22/2017.
+ * Class : AddPlanFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation for a dialog window to create a meal plan.
+ * The purpose of this fragment is to bind the data to the XML objects and pass the data entered
+ * to the models. This fragment is called when the user selects the add botton in the botton right
+ * corner of the screen.
+ *
  */
 
 public class AddPlanFragment extends DialogFragment{
@@ -31,6 +39,9 @@ public class AddPlanFragment extends DialogFragment{
 
     private static final String ARG_PLAN_ID = "plan_id";
 
+    /**
+     * UI items
+     */
     private EditText mPlanName;
     private DatePicker mDatePicker;
     private EditText mServingSize;
@@ -52,16 +63,9 @@ public class AddPlanFragment extends DialogFragment{
         return new AddPlanFragment();
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        UUID planId = (UUID) getArguments().getSerializable(ARG_PLAN_ID);
-//        mPlan = PlannerCatalog.get(getActivity()).getPlan(planId);
-//    }
-
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Create the UI for the fragment and display it to the user
         Date date = new Date();
 
         Calendar calendar = Calendar.getInstance();
@@ -81,12 +85,10 @@ public class AddPlanFragment extends DialogFragment{
         mOneWeekButton = (RadioButton) v.findViewById(R.id.one_week_button);
         mTwoWeeksButton = (RadioButton) v.findViewById(R.id.two_week_button);
 
-        //final int planPeriod = onRadioButtonClicked(v);
-        //final int planPeriod = 7;
 
         mServingSize = (EditText) v.findViewById(R.id.serving_size_dialog);
 
-
+        // Build the dialog and display it to the user
         return new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setTitle(R.string.add_plan_title)
@@ -112,19 +114,19 @@ public class AddPlanFragment extends DialogFragment{
 
                                 //Need to add method to plan to receive serving size
                                 //mServingSize.getText().toString();
-                                sendResult(Activity.RESULT_OK, mPlan.getId());
+                                sendResult(Activity.RESULT_OK);
                             }
                         })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        sendResult(Activity.RESULT_CANCELED, mPlan.getId());
+                        sendResult(Activity.RESULT_CANCELED);
                     }
                 })
                 .create();
     }
 
-    private void sendResult(int resultCode, UUID planId) {
+    private void sendResult(int resultCode) {
         if (getTargetFragment() == null) {
             return;
         }

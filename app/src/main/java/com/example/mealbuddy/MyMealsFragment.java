@@ -9,7 +9,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * Created by Rob Ford on 3/9/2017.
+ * Class : MyMealsFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation the Meals screen
+ * The purpose of this fragment is display the meals that the user has.
+ * This fragment is called when the Meal button is selected in the
+ * bottom navigation bar.
+ *
  */
 
 public class MyMealsFragment extends Fragment {
@@ -18,6 +26,11 @@ public class MyMealsFragment extends Fragment {
     private String mText;
     private TextView mTextView;
 
+    /**
+     * Returns a new instance of the fragment
+     * @param text fragment label
+     * @return a new instance of the fragment
+     */
     public static Fragment newInstance(String text) {
         Fragment frag = new MyMealsFragment();
         Bundle args = new Bundle();

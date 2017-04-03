@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -14,14 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.example.mealbuddy.models.BrowseMealCatalog;
-import com.example.mealbuddy.models.BrowserMeal;
-import com.example.mealbuddy.models.Ingredient;
-import com.example.mealbuddy.models.Recipe;
 import com.example.mealbuddy.utils.SpoonacularManager;
 
 import org.json.JSONArray;
@@ -29,16 +22,29 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 /**
- * Created by Rob Ford on 3/9/2017.
+ * Class : BrowseFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation for browsing meals.
+ * The purpose of this fragment is to allow the user to search for meals using the
+ * spoonacular API. This fragment is called when the user selects the Browse button on the
+ * bottom navigation bar.
+ *
  */
 
 public class BrowseFragment extends Fragment implements SearchView.OnQueryTextListener {
+    /**
+     * String for debug logging
+     */
     private static final String TAG = "BrowseFragment";
 
+    /**
+     * RecyclerView members for displaying the list of meals to the user
+     */
     private RecyclerView mBrowserRecyclerView;
     private BrowserListAdapter mBrowserListAdapter;
 
@@ -48,13 +54,13 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
     private TextView mTextView;
     private SearchView mSearchView;
 
-    private BrowseMealCatalog mBrowseMealCatalog;
-    private List<BrowserMeal> mBrowserMeals;
-
-    private String[] mBrowserMealList;
-
     private MealBrowserListener mListener;
 
+    /**
+     * Creates a new instance of the fragment.
+     * @param text label for the fragment
+     * @return a new instance of the fragment
+     */
     public static Fragment newInstance(String text) {
         Fragment frag = new BrowseFragment();
         Bundle args = new Bundle();
@@ -63,9 +69,11 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
         return frag;
     }
 
+    /**
+     * Adapter for storing list of meals returned by the Spoonacular API.
+     */
     private class BrowserListAdapter extends RecyclerView.Adapter<BrowserListHolder> {
         private List<SpoonacularMeal> mBrowserMeals;
-        private Map<Integer, String> mMealList;
 
         public BrowserListAdapter(List<SpoonacularMeal> browserMeals) {
             mBrowserMeals = browserMeals;
@@ -89,33 +97,11 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
             return mBrowserMeals.size();
         }
 
-        public void searchListFor(String stringText){
-//            List<BrowserMeal> mealArrayList;
-//            stringText = stringText.toLowerCase();
-//
-//            mBrowserMealsListAdapter.clear();
-//
-//            mealArrayList = new ArrayList<>();
-//            for (int i = 0; i < mBrowserMealList.length; i++) {
-//                BrowserMeal browserMeal = new BrowserMeal();
-//                browserMeal.setTitle(mBrowserMealList[i]);
-//                mealArrayList.add(browserMeal);
-//            }
-//
-//            if (stringText.length() == 0) {
-//                mBrowserMealsListAdapter.addAll(mealArrayList);
-//            } else {
-//                for (BrowserMeal browserMeal : mealArrayList) {
-//                    if (browserMeal.getTitle().trim().toLowerCase().contains(stringText)) {
-//                        mBrowserMealsListAdapter.add(browserMeal);
-//                    }
-//                }
-//            }
-//            notifyDataSetChanged();
-        }
-
     }
 
+    /**
+     * Holder to populate a card within the RecyclerView
+     */
     private class BrowserListHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener{
 
@@ -194,6 +180,7 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        // Search the API using the user provided string
                         List<SpoonacularMeal> search_results = new Vector<>();
 
                         try {
@@ -226,34 +213,9 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
         return false;
     }
 
-    private void updateToolbarText(CharSequence text) {
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(text);
-        }
-    }
-
-    private void updateUI() {
-        BrowseMealCatalog browseMealCatalog = BrowseMealCatalog.get(getActivity());
-        List<BrowserMeal> browserMeals = browseMealCatalog.getBrowserMeals();
-
-        List<SpoonacularMeal> search_results = new Vector<>();
-
-        try {
-            JSONArray recipe_array = new JSONArray("[{\"id\":637876,\"title\":\"chicken 65\"},{\"id\":42569,\"title\":\"chicken bbq\"},{\"id\":74194,\"title\":\"chicken olé\"},{\"id\":83890,\"title\":\"chicken blt\"}]");
-            int recipe_count = recipe_array.length();
-            for (int i = 0; i < recipe_count; ++i) {
-                JSONObject obj = recipe_array.getJSONObject(i);
-                search_results.add(new SpoonacularMeal(obj.getInt("id"), obj.getString("title")));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        mBrowserListAdapter = new BrowserListAdapter(search_results);
-        mBrowserRecyclerView.setAdapter(mBrowserListAdapter);
-    }
-
+    /**
+     * Inner class for storing temporary data from the search query
+     */
     class SpoonacularMeal {
         private int mId;
         private String mTitle;
@@ -267,6 +229,9 @@ public class BrowseFragment extends Fragment implements SearchView.OnQueryTextLi
         }
     }
 
+    /**
+     * Interface for callback when the user selects a meal from the search results.
+     */
     public interface MealBrowserListener {
         void OnMealAdded(int id);
     }

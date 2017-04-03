@@ -19,12 +19,23 @@ import com.example.mealbuddy.models.Recipe;
 import java.util.List;
 
 /**
- * Created by Rob Ford on 3/18/2017.
+ * Class : DayPlanPeriodFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation for meal plan period broken up into a vertical
+ * calendar view. The purpose of this fragment is to allow the user to add meals to their current
+ * meal plan. This fragment is called when the user selects a meal plan when on the plans view.
+ *
  */
 
 public class DayPlanPeriodFragment extends Fragment {
+    /**
+     * String for debug logging
+     */
     private static final String TAG = "DayPlanPeriodFragment";
 
+    // UI items
     private RecyclerView mDayPlanPeriodRecyclerView;
     private DayPlanAdapter mDayPlanAdapter;
     private TextView mPlanTitleDatePeriod;
@@ -34,6 +45,12 @@ public class DayPlanPeriodFragment extends Fragment {
 
     private String mText;
 
+    /**
+     * Creates a new instance of the fragment
+     * @param text
+     * @param plan
+     * @return
+     */
     public static Fragment newInstance(String text, Plan plan) {
         Fragment frag = new DayPlanPeriodFragment();
         Bundle args = new Bundle();
@@ -43,6 +60,9 @@ public class DayPlanPeriodFragment extends Fragment {
         return frag;
     }
 
+    /**
+     * Adapter to hold the data for the RecyclerView
+     */
     private class DayPlanAdapter extends RecyclerView.Adapter<DayPlanHolder> {
         private List<DayPlan> mDayPlans;
 
@@ -69,9 +89,13 @@ public class DayPlanPeriodFragment extends Fragment {
         }
     }
 
+    /**
+     * ViewHolder user to organize a card of the RecyclerView
+     */
     private class DayPlanHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener{
 
+        // UI items
         private TextView mDayOfWeekTextView;
         private TextView mDayOfMonthTextView;
         private EditText mMealNameList;
@@ -112,10 +136,6 @@ public class DayPlanPeriodFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_day_plan_period, container, false);
-
-        //Will have to pass an intent of Plan Title and Date periods inorder to populate
-        // mPlanTitleDatePeriod = (TextView) view.findViewById(R.id.plan_title_and_date_period);
-        //mPlanTitleDatePeriod.setText();
 
         mDayPlanPeriodRecyclerView = (RecyclerView) view.findViewById(R.id.day_plan_period_recycler_view);
         mDayPlanPeriodRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
