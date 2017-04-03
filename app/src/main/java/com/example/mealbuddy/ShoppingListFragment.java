@@ -16,7 +16,15 @@ import com.example.mealbuddy.models.User;
 import java.util.Map;
 
 /**
- * Created by Rob Ford on 3/9/2017.
+ * Class : ShoppingListFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation the shopping list that was generated
+ * from the meal plan created by the user.
+ * The purpose of this fragment is display a shopping list of ingredients based on the user's
+ * meal plan. This fragment is called when the Shopping list button is selected in the navigation bar.
+ *
  */
 
 /**

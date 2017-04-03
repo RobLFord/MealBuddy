@@ -11,7 +11,15 @@ import android.view.View;
 import android.widget.EditText;
 
 /**
- * Created by Rob Ford on 3/7/2017.
+ * Class : SignUpFragment
+ *
+ * Description :
+ *
+ * This fragment displays the visual representation for the signup dialog.
+ * The purpose of this fragment is pass data to the FireBase server to allow the user
+ * to signup for an account for the MealBuddy App.
+ * This fragment is called when the sign me link is selected from the login screen.
+ *
  */
 
 /**
